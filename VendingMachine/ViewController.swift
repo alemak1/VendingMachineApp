@@ -18,6 +18,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     @IBOutlet weak var balanceLabel: UILabel!
     @IBOutlet weak var quantityLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var quantityStepper: UIStepper!
 
     
     let vendingMachine: VendingMachine
@@ -139,6 +140,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         updateCell(having: indexPath, selected: false)
+        
+        quantityStepper.value = 1
+        quantityLabel.text = "1"
+        quantity = 1
         
         currentSelection = vendingMachine.selection[indexPath.row]
         
