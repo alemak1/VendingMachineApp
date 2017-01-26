@@ -44,6 +44,10 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // Do any additional setup after loading the view, typically from a nib.
         setupCollectionViewCells()
         print(vendingMachine.inventory)
+        
+        balanceLabel.text = "$\(vendingMachine.amountDeposited)"
+        totalLabel.text = "$00.00"
+        priceLabel.text = "$0.00"
     }
 
     override func didReceiveMemoryWarning() {
@@ -78,8 +82,15 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             
             do{
                 try vendingMachine.vend(selection: currentSelection, quantity: quantity)
+                updateDisplay()
             } catch {
                 //FIXME: Error handling code
+            }
+            
+            
+            if let indexPath = collectionView.indexPathsForSelectedItems?.first{
+                collectionView.deselectItem(at: indexPath, animated: true)
+                updateCell(having: indexPath, selected: false)
             }
             
         } else {
@@ -88,6 +99,11 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     
+    func updateDisplay(){
+        balanceLabel.text = "$\(vendingMachine.amountDeposited)"
+        totalLabel.text = "$00.00"
+        priceLabel.text = "$0.00"
+    }
     
     // MARK: UICollectionViewDataSource
     
@@ -115,6 +131,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         updateCell(having: indexPath, selected: false)
         
         currentSelection = vendingMachine.selection[indexPath.row]
+        
+        if let currentSelection = currentSelection, let item = vendingMachine.item(forSelection: currentSelection){
+            
+            priceLabel.text = "$\(item.price)"
+            totalLabel.text = "$\(item.price * Double(quantity))"
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
