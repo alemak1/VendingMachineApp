@@ -48,6 +48,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         balanceLabel.text = "$\(vendingMachine.amountDeposited)"
         totalLabel.text = "$00.00"
         priceLabel.text = "$0.00"
+        quantityLabel.text = "1"
     }
 
     override func didReceiveMemoryWarning() {
@@ -104,6 +105,15 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         totalLabel.text = "$00.00"
         priceLabel.text = "$0.00"
     }
+    
+    
+    @IBAction func updateQuantity(_ sender: UIStepper) {
+        quantity = Int(sender.value)
+        quantityLabel.text = "\(quantity)"
+        
+    }
+   
+    
     
     // MARK: UICollectionViewDataSource
     
