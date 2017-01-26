@@ -45,10 +45,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         setupCollectionViewCells()
         print(vendingMachine.inventory)
         
-        balanceLabel.text = "$\(vendingMachine.amountDeposited)"
-        totalLabel.text = "$00.00"
-        priceLabel.text = "$0.00"
-        quantityLabel.text = "1"
+        
+        updateDisplayWith(balance: vendingMachine.amountDeposited, totalPrice: 0.00, itemPrice: 0.00, itemQuantity: 1)
     }
 
     override func didReceiveMemoryWarning() {
@@ -83,7 +81,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             
             do{
                 try vendingMachine.vend(selection: currentSelection, quantity: Int(quantityStepper.value))
-                updateDisplay()
+                updateDisplayWith(balance: vendingMachine.amountDeposited,totalPrice: 0.00, itemPrice: 0, itemQuantity: 1)
             } catch {
                 //FIXME: Error handling code
             }
@@ -100,21 +98,37 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     
-    func updateDisplay(){
-        balanceLabel.text = "$\(vendingMachine.amountDeposited)"
-        totalLabel.text = "$00.00"
-        priceLabel.text = "$0.00"
+    func updateDisplayWith(balance: Double? = nil, totalPrice: Double? = nil, itemPrice: Double? = nil, itemQuantity: Int? = nil){
+        if let balanceValue = balance{
+            balanceLabel.text = "$\(balanceValue)"
+
+        }
+        
+        if let totalValue = totalPrice{
+            totalLabel.text = "$\(totalValue)"
+
+        }
+        
+        if let priceValue = itemPrice{
+            priceLabel.text =  "$\(priceValue)"
+        }
+        
+        if let quantityValue = itemQuantity{
+            quantityLabel.text = "\(quantityValue)"
+        }
     }
     
     
     func updateTotalPrice(for item: VendingItem){
-        totalLabel.text = "\(item.price*quantityStepper.value)"
+        let totalPrice = item.price*quantityStepper.value
+        updateDisplayWith(totalPrice: totalPrice)
         
     }
     
     
     @IBAction func updateQuantity(_ sender: UIStepper) {
-        quantityLabel.text = "\(Int(quantityStepper.value)))"
+        let quantity = Int(quantityStepper.value)
+        updateDisplayWith(itemQuantity: quantity)
         
         if let currentSelection = currentSelection, let item = vendingMachine.item(forSelection: currentSelection){
             
@@ -151,16 +165,14 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         updateCell(having: indexPath, selected: false)
         
         quantityStepper.value = 1
-        quantityLabel.text = "1"
-        
-        totalLabel.text = "$00.00"
+        updateDisplayWith(totalPrice: 0, itemQuantity: 1)
         
         currentSelection = vendingMachine.selection[indexPath.row]
         
         if let currentSelection = currentSelection, let item = vendingMachine.item(forSelection: currentSelection){
             
-            priceLabel.text = "$\(item.price)"
-            totalLabel.text = "$\(item.price * Double(quantityStepper.value))"
+            let totalPrice = item.price * Double(quantityStepper.value)
+            updateDisplayWith(totalPrice: totalPrice, itemPrice: item.price)
         }
     }
     
