@@ -24,6 +24,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     var currentSelection: VendingSelection?
     
+    var quantity = 1
+    
     required init?(coder aDecoder: NSCoder) {
         do{
             let dictionary = try PlistConverter.dictionary(fromFile: "VendingInventory", ofType: "plist")
@@ -65,6 +67,27 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
         collectionView.collectionViewLayout = layout
     }
+    
+    
+    // MARK - Vending Machine
+    
+    
+    @IBAction func purchase() {
+        
+        if let currentSelection = currentSelection{
+            
+            do{
+                try vendingMachine.vend(selection: currentSelection, quantity: quantity)
+            } catch {
+                //FIXME: Error handling code
+            }
+            
+        } else {
+            // FIXME: Alert user to no selection
+        }
+    }
+    
+    
     
     // MARK: UICollectionViewDataSource
     
