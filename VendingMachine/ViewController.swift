@@ -22,6 +22,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     let vendingMachine: VendingMachine
     
+    var currentSelection: VendingSelection?
+    
     required init?(coder aDecoder: NSCoder) {
         do{
             let dictionary = try PlistConverter.dictionary(fromFile: "VendingInventory", ofType: "plist")
@@ -83,10 +85,13 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         updateCell(having: indexPath, selected: true)
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         updateCell(having: indexPath, selected: false)
+        
+        currentSelection = vendingMachine.selection[indexPath.row]
     }
     
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
