@@ -89,8 +89,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
             } catch VendingMachineError.insufficientFunds(let required){
                 let message = "You need $\(required) to complete the transaction"
                 showAlert(title: "Insufficient Funds", message: message)
-            } catch {
-                
+            } catch let error {
+                fatalError("\(error)")
             }
             
             
@@ -145,7 +145,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
    
     func showAlert(title: String,  message: String, style: UIAlertControllerStyle? = .alert){
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: style)
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: style!)
         
         let okAction = UIAlertAction(title: "OK", style: .default, handler: dismissAlert)
         
