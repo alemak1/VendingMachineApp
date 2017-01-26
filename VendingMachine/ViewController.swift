@@ -83,7 +83,12 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
                 try vendingMachine.vend(selection: currentSelection, quantity: Int(quantityStepper.value))
                 updateDisplayWith(balance: vendingMachine.amountDeposited,totalPrice: 0.00, itemPrice: 0, itemQuantity: 1)
             } catch VendingMachineError.outOfStock{
-                showAlert()
+                showAlert(title: "Out of Stock", message: "This item is unavailable. Please make another selection")
+            } catch VendingMachineError.invalidSelection {
+                showAlert(title: "Invalid Selection", message: "Please make another selection")
+            } catch VendingMachineError.insufficientFunds(let required){
+                let message = "You need $\(required) to complete the transaction"
+                showAlert(title: "Insufficient Funds", message: message)
             } catch {
                 
             }
@@ -139,8 +144,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         
     }
    
-    func showAlert(){
-        let alertController = UIAlertController(title: "Out of Stock", message: "This item is unavailable. Please make another selection.", preferredStyle: .alert)
+    func showAlert(title: String,  message: String, style: UIAlertControllerStyle? = .alert){
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: style)
         
         let okAction = UIAlertAction(title: "OK", style: .default, handler: dismissAlert)
         
