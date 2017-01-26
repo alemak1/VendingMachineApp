@@ -108,9 +108,20 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
     }
     
     
+    func updateTotalPrice(for item: VendingItem){
+        totalLabel.text = "\(item.price*Double(quantity))"
+        
+    }
+    
+    
     @IBAction func updateQuantity(_ sender: UIStepper) {
         quantity = Int(sender.value)
         quantityLabel.text = "\(quantity)"
+        
+        if let currentSelection = currentSelection, let item = vendingMachine.item(forSelection: currentSelection){
+            
+            updateTotalPrice(for: item)
+        }
         
     }
    
@@ -144,6 +155,8 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         quantityStepper.value = 1
         quantityLabel.text = "1"
         quantity = 1
+        
+        totalLabel.text = "$00.00"
         
         currentSelection = vendingMachine.selection[indexPath.row]
         
